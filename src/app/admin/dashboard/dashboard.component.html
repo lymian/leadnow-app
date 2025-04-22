@@ -1,0 +1,25 @@
+<div class="d-flex min-vh-100">
+  <!-- Sidebar -->
+  <nav class="bg-light border-end p-3" style="width: 250px">
+    <h5 class="mb-4">Menú</h5>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          routerLink="/dashboard/formularios"
+          routerLinkActive="active"
+          >Formularios</a
+        >
+      </li>
+    </ul>
+    <hr />
+    <button class="btn btn-outline-danger w-100 mt-3" (click)="logout()">
+      Cerrar sesión
+    </button>
+  </nav>
+
+  <!-- Main content -->
+  <div class="flex-grow-1 p-4">
+    <router-outlet></router-outlet>
+  </div>
+</div>
