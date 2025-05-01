@@ -41,4 +41,13 @@ export class FormulariosService {
   crearFormulario(dto: CrearFormularioDTO): Observable<Formulario> {
     return this.http.post<Formulario>(`${this.baseUrl}/crear`, dto);
   }
+  // http://localhost:8080/formularios/eliminar/1
+  eliminarFormulario(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/eliminar/${id}`);
+  }
+
+  //http://localhost:8080/formularios/actualizar/1
+  actualizarFormulario(id: number, dto: CrearFormularioDTO): Observable<Formulario> {
+    return this.http.put<Formulario>(`${this.baseUrl}/actualizar/${id}`, dto);
+  }
 }

@@ -1,94 +1,61 @@
 import { Component, OnInit } from '@angular/core';
-import { Formulario, FormulariosService } from '../../../services/formularios.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { LeadsService } from '../../../services/leads.service';
+import { FormulariosService, Formulario, Lead } from '../../../services/formularios.service';
+import { FormularioDetalleComponent } from '../formulario-detalle/formulario-detalle.component';
+import { CrearFormularioModalComponent } from '../../../components/crear-formulario-modal/crear-formulario-modal.component';
 
 @Component({
   selector: 'app-formularios',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormularioDetalleComponent, CrearFormularioModalComponent],
   templateUrl: './formularios.component.html',
   styleUrl: './formularios.component.css'
 })
 export class FormulariosComponent implements OnInit {
-
   formularios: Formulario[] = [];
-  nuevoLead = {
-    nombre: '',
-    email: ''
-  };
-  formularioSeleccionado: number | null = null;
+  formularioSeleccionado: Formulario | null = null;
 
-  constructor(private formulariosService: FormulariosService,
-    private leadsService: LeadsService) { }
+  constructor(private formulariosService: FormulariosService) { }
 
   ngOnInit(): void {
+    this.cargarFormularios();
+  }
+
+  cargarFormularios(): void {
     this.formulariosService.getMisFormularios().subscribe({
-      next: (res) => this.formularios = res,
+      // ordeanr por fecha de creacion
+      next: (data) => this.formularios = data.sort((a, b) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()),
       error: (err) => console.error('Error al cargar formularios', err)
     });
   }
 
-  nuevoFormulario = {
-    nombre: '',
-    descripcion: ''
-  };
+  seleccionarFormulario(formulario: Formulario): void {
+    this.formularioSeleccionado = formulario;
+  }
 
-  crearFormulario() {
-    if (!this.nuevoFormulario.nombre || !this.nuevoFormulario.descripcion) return;
+  cerrarDetalle(): void {
+    this.formularioSeleccionado = null;
+  }
+  modalVisible = false;
 
-    this.formulariosService.crearFormulario(this.nuevoFormulario).subscribe({
-      next: (res) => {
-        this.nuevoFormulario = { nombre: '', descripcion: '' };
-        // Recargar lista (asumiendo que tienes esta función)
+  abrirModal(): void {
+    this.modalVisible = true;
+  }
+
+  cerrarModal(): void {
+    this.modalVisible = false;
+  }
+
+  crearFormulario(dto: { nombre: string, descripcion: string }): void {
+    this.formulariosService.crearFormulario(dto).subscribe({
+      next: () => {
         this.cargarFormularios();
-        alert('Formulario creado con éxito!');
+        this.cerrarModal();
       },
-      error: (err) => {
-        console.error('Error al crear formulario:', err);
-      }
+      error: err => console.error('Error al crear formulario', err)
     });
   }
-  cargarFormularios() {
-    this.formulariosService.getMisFormularios().subscribe({
-      next: (res) => {
-        this.formularios = res;
-      },
-      error: (err) => {
-        console.error('Error al cargar formularios:', err);
-      }
-    });
-  }
-  // Función para mostrar el formulario de crear un lead
-  abrirFormularioLead(idFormulario: number) {
-    this.formularioSeleccionado = this.formularioSeleccionado === idFormulario ? null : idFormulario;
-  }
-  // Función para crear un nuevo lead
-  crearLead(idFormulario: number) {
-    if (!this.nuevoLead.nombre || !this.nuevoLead.email) return;
-
-    const leadData = {
-      nombre: this.nuevoLead.nombre,
-      email: this.nuevoLead.email,
-      estado: 'NUEVO',
-      idFormulario: idFormulario
-    };
-
-    this.leadsService.crearLead(leadData).subscribe({
-      next: (res) => {
-        console.log('Lead creado con éxito:', res);
-        // Limpia los campos después de la creación
-        this.nuevoLead = { nombre: '', email: '' };
-        // Recargar la lista de formularios
-        this.formulariosService.getMisFormularios().subscribe({
-          next: (res) => this.formularios = res,
-          error: (err) => console.error('Error al cargar formularios', err)
-        });
-      },
-      error: (err) => {
-        console.error('Error al crear lead:', err);
-      }
-    });
+  recargar(): void {
+    this.cerrarDetalle();
+    this.cargarFormularios();
   }
 }

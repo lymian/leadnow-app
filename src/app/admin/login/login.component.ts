@@ -15,17 +15,22 @@ export class LoginComponent {
   password = '';
   errorMessages: string[] = [];
   successMessage: string | null = null;
+  isLoading = false;
+
+
 
   constructor(private authService: AuthService) { }
 
   onLogin() {
     this.errorMessages = [];
     this.successMessage = null;
+    this.isLoading = true;
 
     const credentials = {
       username: this.username,
       password: this.password,
     };
+
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
@@ -33,11 +38,13 @@ export class LoginComponent {
 
         // Si se recibió un token correctamente
         if (response.token) {
+          localStorage.setItem('user', this.username);
           window.location.href = '/dashboard'; // Redirigir a la página de dashboard
         }
       },
       error: (error) => {
         console.error('❌ Error en la petición:', error);
+        this.isLoading = false;
 
         // Manejo detallado del error según estructura del backend
         if (error.error && error.error.errors) {

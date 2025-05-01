@@ -1,0 +1,162 @@
+<!-- Backdrop mejorado con efecto blur -->
+<div class="modal-backdrop fade show backdrop-blur" *ngIf="visible"></div>
+
+<!-- Modal rediseñado -->
+<div
+  class="modal fade show d-block animate__animated animate__fadeIn"
+  tabindex="-1"
+  *ngIf="visible"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div
+      class="modal-content border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__zoomIn animate__faster"
+    >
+      <!-- Header con gradiente -->
+      <div class="modal-header border-0 bg-gradient-primary py-4">
+        <h5 class="modal-title text-white d-flex align-items-center">
+          <div
+            class="icon-circle bg-white bg-opacity-20 me-2 d-flex align-items-center justify-content-center"
+          >
+            <i class="fas fa-user-edit text-white"></i>
+          </div>
+          Editar Lead
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          aria-label="Cerrar"
+          (click)="cancelar()"
+        ></button>
+      </div>
+
+      <!-- Body con estilos mejorados -->
+      <div class="modal-body p-4">
+        <!-- Tarjeta de información de contacto -->
+        <div class="card bg-light border-0 rounded-4 p-3 mb-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="avatar-circle me-3">
+              {{ leadEditado.nombre.substring(0, 1).toUpperCase() }}
+            </div>
+            <div>
+              <h6 class="mb-0 text-primary">Información de contacto</h6>
+              <p class="mb-0 text-muted small">
+                ID: #{{ leadEditado.id || "000" }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario con campos mejorados -->
+        <div class="row g-4">
+          <!-- Campo de nombre -->
+          <div class="col-12">
+            <div class="form-floating">
+              <input
+                type="text"
+                [(ngModel)]="leadEditado.nombre"
+                class="form-control bg-light border-0 rounded-3"
+                id="nombreLead"
+                placeholder="Nombre completo"
+              />
+              <label for="nombreLead" class="text-muted">
+                <i class="fas fa-user me-2 text-primary-light"></i>Nombre
+                completo
+              </label>
+            </div>
+          </div>
+
+          <!-- Campo de email -->
+          <div class="col-12">
+            <div class="form-floating">
+              <input
+                type="email"
+                [(ngModel)]="leadEditado.email"
+                class="form-control bg-light border-0 rounded-3"
+                id="emailLead"
+                placeholder="Correo electrónico"
+              />
+              <label for="emailLead" class="text-muted">
+                <i class="fas fa-envelope me-2 text-primary-light"></i>Correo
+                electrónico
+              </label>
+            </div>
+          </div>
+
+          <!-- Campo de estado con mejor estilo visual -->
+          <div class="col-12">
+            <label class="form-label mb-2 d-flex align-items-center">
+              <i class="fas fa-tag me-2 text-primary-light"></i>Estado del lead
+            </label>
+            <div class="estado-selector">
+              <div class="btn-group w-100" role="group">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="estado"
+                  id="estadoNuevo"
+                  autocomplete="off"
+                  [checked]="leadEditado.estado === 'NUEVO'"
+                  (change)="leadEditado.estado = 'NUEVO'"
+                />
+                <label
+                  class="btn btn-outline-success py-3 rounded-start-3"
+                  for="estadoNuevo"
+                >
+                  <i class="fas fa-star me-2"></i>Nuevo
+                </label>
+
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="estado"
+                  id="estadoAtendido"
+                  autocomplete="off"
+                  [checked]="leadEditado.estado === 'ATENDIDO'"
+                  (change)="leadEditado.estado = 'ATENDIDO'"
+                />
+                <label
+                  class="btn btn-outline-warning py-3"
+                  for="estadoAtendido"
+                >
+                  <i class="fas fa-clock me-2"></i>Atendido
+                </label>
+
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="estado"
+                  id="estadoDescartado"
+                  autocomplete="off"
+                  [checked]="leadEditado.estado === 'DESCARTADO'"
+                  (change)="leadEditado.estado = 'DESCARTADO'"
+                />
+                <label
+                  class="btn btn-outline-danger py-3 rounded-end-3"
+                  for="estadoDescartado"
+                >
+                  <i class="fas fa-times-circle me-2"></i>Descartado
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer con botones mejorados -->
+      <div class="modal-footer border-0 px-4 pb-4 pt-2">
+        <button
+          class="btn btn-light rounded-pill px-4 py-2 d-flex align-items-center"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-2"></i>Cancelar
+        </button>
+        <button
+          class="btn btn-primary rounded-pill px-4 py-2 d-flex align-items-center shadow-sm"
+          (click)="guardar()"
+        >
+          <i class="fas fa-save me-2"></i>Guardar cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="modal-backdrop">
+  <div class="modal-container">
+    <h3>Editar Formulario</h3>
+    <form (ngSubmit)="onGuardar()">
+      <label>Nombre:</label>
+      <input [(ngModel)]="dto.nombre" name="nombre" required />
+      <label>Descripción:</label>
+      <textarea
+        [(ngModel)]="dto.descripcion"
+        name="descripcion"
+        required
+      ></textarea>
+
+      <div class="modal-actions">
+        <button type="submit">Guardar</button>
+        <button type="button" (click)="onCerrar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

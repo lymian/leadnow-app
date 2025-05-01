@@ -1,25 +1,248 @@
+<!-- Botón de toggle mejorado para dispositivos móviles -->
+<button
+  class="btn btn-primary menu-toggle rounded-circle shadow-sm position-fixed d-md-none"
+  (click)="toggleSidebar()"
+  style="z-index: 1030; top: 1rem; left: 1rem; width: 48px; height: 48px"
+>
+  <i class="fas" [ngClass]="isSidebarCollapsed ? 'fa-bars' : 'fa-times'"></i>
+</button>
+
 <div class="d-flex min-vh-100">
-  <!-- Sidebar -->
-  <nav class="bg-light border-end p-3" style="width: 250px">
-    <h5 class="mb-4">Menú</h5>
-    <ul class="nav flex-column">
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          routerLink="/dashboard/formularios"
-          routerLinkActive="active"
-          >Formularios</a
+  <!-- Sidebar mejorado -->
+  <nav
+    class="sidebar shadow-sm transition-all d-flex flex-column bg-white"
+    [ngClass]="{ collapsed: isSidebarCollapsed, expanded: !isSidebarCollapsed }"
+  >
+    <!-- Logo y cabecera -->
+    <div class="sidebar-header py-4 px-3">
+      <div class="d-flex align-items-center">
+        <div
+          class="logo-container bg-primary bg-opacity-10 rounded-3 p-2 me-3 d-flex align-items-center justify-content-center"
         >
-      </li>
-    </ul>
-    <hr />
-    <button class="btn btn-outline-danger w-100 mt-3" (click)="logout()">
-      Cerrar sesión
-    </button>
+          <i class="fas fa-cube text-primary fa-lg"></i>
+        </div>
+        <div class="logo-text" [ngClass]="{ 'd-none': isSidebarCollapsed }">
+          <h5 class="mb-0 fw-bold text-primary">LeadNow</h5>
+          <p class="text-muted mb-0 small">Gestión de formularios</p>
+        </div>
+
+        <!-- Botón de colapsar para tablets/desktop -->
+        <button
+          class="btn btn-sm btn-icon ms-auto rounded-circle collapse-btn d-none d-md-flex"
+          (click)="toggleSidebar()"
+        >
+          <i
+            class="fas"
+            [ngClass]="
+              isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'
+            "
+          ></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Secciones del menú -->
+    <div class="sidebar-menu flex-grow-1 px-3">
+      <div class="menu-section mb-4">
+        <p
+          class="menu-label text-uppercase fw-semibold text-muted small mb-2"
+          *ngIf="!isSidebarCollapsed"
+        >
+          Principal
+        </p>
+        <ul class="nav flex-column gap-1">
+          <li class="nav-item">
+            <a
+              class="nav-link rounded-3 d-flex align-items-center"
+              routerLink="/dashboard/formularios"
+              routerLinkActive="active"
+            >
+              <div class="icon-wrapper">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <span class="ms-3" *ngIf="!isSidebarCollapsed">Formularios</span>
+              <span
+                class="badge bg-primary rounded-pill ms-auto"
+                *ngIf="!isSidebarCollapsed"
+              ></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Perfil de usuario en la parte inferior -->
+    <div class="sidebar-footer p-3 border-top mt-auto">
+      <div *ngIf="!isSidebarCollapsed" class="d-flex align-items-center mb-3">
+        <div class="avatar-circle me-2"><i class="fa-solid fa-user"></i></div>
+        <div class="overflow-hidden">
+          <h6 class="mb-0 text-truncate">{{ user }}</h6>
+          <p class="text-muted mb-0 small text-truncate">ejemplo.com</p>
+        </div>
+      </div>
+
+      <button
+        class="btn btn-danger w-100 rounded-pill d-flex align-items-center justify-content-center"
+        (click)="logout()"
+      >
+        <i
+          class="fas fa-sign-out-alt"
+          [ngClass]="{ 'me-2': !isSidebarCollapsed }"
+        ></i>
+        <span *ngIf="!isSidebarCollapsed">Cerrar sesión</span>
+      </button>
+    </div>
   </nav>
 
   <!-- Main content -->
-  <div class="flex-grow-1 p-4">
-    <router-outlet></router-outlet>
+  <div class="flex-grow-1 p-4 bg-light main-content transition-all">
+    <!-- Contenido de la página -->
+    <main class="content-body">
+      <router-outlet></router-outlet>
+    </main>
   </div>
 </div>
+
+<style>
+  /* Estilos para el sidebar */
+  .sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    z-index: 1020;
+  }
+
+  .sidebar.collapsed {
+    width: 100px;
+  }
+
+  .main-content {
+    margin-left: 280px;
+    min-height: 100vh;
+  }
+
+  .sidebar.collapsed + .main-content {
+    margin-left: 80px;
+  }
+
+  /* Estilos para los elementos del sidebar */
+  .logo-container {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collapse-btn {
+    color: #6c757d;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .collapse-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Estilos para los ítems de navegación */
+  .nav-link {
+    color: #495057;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(13, 110, 253, 0.08);
+    color: #0d6efd;
+  }
+
+  .nav-link.active {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+    font-weight: 500;
+  }
+
+  .icon-wrapper {
+    width: 24px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Estilos para avatares */
+  .avatar-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .avatar-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  /* Transiciones */
+  .transition-all {
+    transition: all 0.3s ease;
+  }
+
+  /* Responsive para dispositivos móviles */
+  @media (max-width: 767.98px) {
+    .sidebar {
+      transform: translateX(-100%);
+      width: 280px;
+    }
+
+    .sidebar.expanded {
+      transform: translateX(0);
+    }
+
+    .main-content {
+      margin-left: 0 !important;
+    }
+  }
+
+  /* Estilos de búsqueda */
+  .search-box {
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .search-box:focus-within {
+    border-color: #0d6efd;
+    background-color: white !important;
+  }
+
+  .search-box input::placeholder {
+    color: #adb5bd;
+    font-size: 0.9rem;
+  }
+
+  /* Sombras y efectos */
+  .shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+  }
+
+  /* Badges */
+  .badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+  }
+</style>

@@ -1,172 +1,85 @@
-<div class="container mt-4">
-  <h3 class="mb-4">Mis Formularios</h3>
-
-  <div *ngIf="formularios.length === 0" class="alert alert-info">
-    No tienes formularios registrados.
-  </div>
-
-  <button
-    class="btn btn-outline-primary mb-3"
-    type="button"
-    data-bs-toggle="collapse"
-    data-bs-target="#crearFormularioCollapse"
+<div class="container py-5">
+  <!-- Header con diseño mejorado -->
+  <div
+    class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom"
   >
-    Nuevo Formulario
-  </button>
-
-  <div class="collapse mb-4" id="crearFormularioCollapse">
-    <div class="card card-body">
-      <form (ngSubmit)="crearFormulario()" #formularioForm="ngForm">
-        <div class="mb-3">
-          <label for="nombre" class="form-label">Nombre</label>
-          <input
-            id="nombre"
-            type="text"
-            class="form-control"
-            [(ngModel)]="nuevoFormulario.nombre"
-            name="nombre"
-            required
-          />
-        </div>
-
-        <div class="mb-3">
-          <label for="descripcion" class="form-label">Descripción</label>
-          <input
-            id="descripcion"
-            type="text"
-            class="form-control"
-            [(ngModel)]="nuevoFormulario.descripcion"
-            name="descripcion"
-            required
-          />
-        </div>
-
-        <button
-          class="btn btn-primary"
-          type="submit"
-          [disabled]="!formularioForm.valid"
-        >
-          Crear
-        </button>
-      </form>
+    <h2
+      class="m-0 d-flex align-items-center text-primary animate__animated animate__fadeIn"
+    >
+      <i class="fas fa-clipboard-list me-3 text-primary"></i>
+      <span class="fw-bold">Mis Formularios</span>
+    </h2>
+    <div class="bg-light rounded-pill px-3 py-2">
+      <button class="btn btn-primary mb-3" (click)="abrirModal()">
+        + Nuevo Formulario
+      </button>
     </div>
   </div>
 
-  <div class="accordion" id="formulariosAccordion">
-    <div
-      class="accordion-item"
-      *ngFor="let formulario of formularios; let i = index"
-    >
-      <h2 class="accordion-header" [id]="'heading' + i">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          [attr.data-bs-target]="'#collapse' + i"
-          aria-expanded="false"
-          [attr.aria-controls]="'collapse' + i"
-        >
-          {{ formulario.nombre }} — {{ formulario.descripcion }}
-        </button>
-      </h2>
-
-      <div
-        [id]="'collapse' + i"
-        class="accordion-collapse collapse"
-        [attr.aria-labelledby]="'heading' + i"
-        data-bs-parent="#formulariosAccordion"
+  <!-- Selected Form Detail con sombras y efectos mejorados -->
+  <div
+    *ngIf="formularioSeleccionado; else listaFormularios"
+    class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp"
+  >
+    <div class="card-header bg-primary bg-opacity-10 border-0 py-3">
+      <h4 class="text-primary m-0 fw-bold">Detalles del formulario</h4>
+    </div>
+    <div class="card-body p-0">
+      <app-formulario-detalle
+        [formulario]="formularioSeleccionado"
+        (cerrar)="recargar()"
+      ></app-formulario-detalle>
+    </div>
+    <div class="card-footer bg-white border-0 pt-0 pb-4 px-4">
+      <button
+        class="btn btn-outline-primary rounded-pill px-4 py-2 d-flex align-items-center"
+        (click)="cerrarDetalle()"
       >
-        <div class="accordion-body">
-          <p><strong>Usuario:</strong> {{ formulario.usuario }}</p>
-          <p>
-            <strong>Fecha de creación:</strong>
-            {{ formulario.fechaCreacion | date : "short" }}
-          </p>
+        <i class="fas fa-arrow-left me-2"></i> Volver a la lista
+      </button>
+    </div>
+  </div>
 
-          <div *ngIf="formulario.leads.length === 0" class="text-muted">
-            Este formulario aún no tiene leads.
-          </div>
-
-          <div *ngIf="formulario.leads.length > 0" class="table-responsive">
-            <table class="table table-sm table-bordered mt-3">
-              <thead class="table-light">
-                <tr>
-                  <th>#</th>
-                  <th>Nombre</th>
-                  <th>Email</th>
-                  <th>Fecha de envío</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let lead of formulario.leads; let j = index">
-                  <td>{{ j + 1 }}</td>
-                  <td>{{ lead.nombre }}</td>
-                  <td>{{ lead.email }}</td>
-                  <td>{{ lead.fechaEnvio | date : "short" }}</td>
-                  <td>
-                    <span
-                      class="badge"
-                      [ngClass]="{
-                        'bg-success': lead.estado === 'ATENDIDO',
-                        'bg-secondary': lead.estado === 'NUEVO',
-                        'bg-danger': lead.estado === 'DESCARTADO',
-                      }"
-                    >
-                      {{ lead.estado }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Botón para agregar un lead -->
-          <button
-            class="btn btn-success mt-3"
-            (click)="abrirFormularioLead(formulario.id)"
-          >
-            Agregar Lead
-          </button>
-
-          <!-- Formulario para agregar un nuevo lead -->
-          <div *ngIf="formulario.id === formularioSeleccionado" class="mt-3">
-            <form (ngSubmit)="crearLead(formulario.id)" #leadForm="ngForm">
-              <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input
-                  id="nombre"
-                  type="text"
-                  class="form-control"
-                  [(ngModel)]="nuevoLead.nombre"
-                  name="nombre"
-                  required
-                />
+  <!-- Form List con tarjetas modernas -->
+  <ng-template #listaFormularios>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <div
+        *ngFor="let f of formularios; let i = index"
+        class="col animate__animated animate__fadeIn"
+        [style.animation-delay]="i * 0.1 + 's'"
+      >
+        <div
+          class="card h-100 border-0 shadow-sm rounded-4 hover-shadow transition"
+          (click)="seleccionarFormulario(f)"
+          role="button"
+        >
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                <i class="fas fa-file-alt fa-lg text-primary"></i>
               </div>
-
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  class="form-control"
-                  [(ngModel)]="nuevoLead.email"
-                  name="email"
-                  required
-                />
-              </div>
-
-              <button
-                class="btn btn-primary"
-                type="submit"
-                [disabled]="!leadForm.valid"
+              <h5 class="card-title fw-bold mb-0 text-dark">{{ f.nombre }}</h5>
+            </div>
+            <p class="card-text text-secondary mb-3">{{ f.descripcion }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted small">
+                <i class="far fa-calendar-alt me-1"></i> Fecha de creación:
+                {{ f.fechaCreacion | date : "dd/MM/yyyy" }}
+              </span>
+              <span
+                class="badge bg-primary rounded-pill px-3 py-2 d-flex align-items-center"
               >
-                Crear Lead
-              </button>
-            </form>
+                <i class="fas fa-users me-1"></i> {{ f.leads.length }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 </div>
+<app-crear-formulario-modal
+  [visible]="modalVisible"
+  (onCrear)="crearFormulario($event)"
+  (onCancelar)="cerrarModal()"
+></app-crear-formulario-modal>

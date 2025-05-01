@@ -1,0 +1,62 @@
+/* Custom styles for the formulario-detalle component */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  background-color: #fff;
+}
+
+/* Table styling */
+.table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Badge styling */
+.badge {
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Empty state styling */
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .card {
+    padding: 1.5rem;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+  }
+}
+

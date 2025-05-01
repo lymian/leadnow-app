@@ -1,0 +1,221 @@
+<div
+  *ngIf="formulario"
+  class="card rounded-lg shadow-sm border-0 mb-4 animate__animated animate__fadeIn"
+>
+  <!-- Header con estilo mejorado -->
+  <div class="card-header bg-gradient-primary-to-secondary p-4 rounded-top">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h3 class="h4 mb-1 fw-bold d-flex align-items-center">
+          <i class="fas fa-file-alt me-2"></i>{{ formulario.nombre }}
+        </h3>
+        <p class="mb-0 small">{{ formulario.descripcion }}</p>
+        <div>
+          <button
+            class="btn btn-outline-warning btn-sm mt-2"
+            (click)="abrirModalEditar()"
+          >
+            <i class="fas fa-edit"></i> Editar formulario
+          </button>
+        </div>
+        <button
+          (click)="eliminarFormulario()"
+          class="btn btn-outline-danger btn-sm mt-2"
+          [ngClass]="{ 'btn-opacity-50': formulario.leads.length > 0 }"
+        >
+          <i class="fas fa-trash"></i> Eliminar Formulario
+        </button>
+      </div>
+      <span class="badge bg-white text-primary px-3 py-2 shadow-sm">
+        <i class="fas fa-calendar-alt me-1"></i>
+        {{ formulario.fechaCreacion | date : "dd MMM, yyyy" }}
+      </span>
+    </div>
+  </div>
+
+  <div class="card-body p-4">
+    <!-- Lead Stats Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex align-items-center">
+        <div
+          class="rounded-circle bg-light p-2 me-3 d-flex align-items-center justify-content-center"
+          style="width: 48px; height: 48px"
+        >
+          <i class="fas fa-users text-primary fa-lg"></i>
+        </div>
+        <div>
+          <h4 class="h5 mb-0 fw-bold">Leads</h4>
+          <p class="text-muted mb-0 small">
+            Total: {{ formulario.leads.length }}
+          </p>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-outline-primary px-3">
+        <i class="fas fa-download me-1"></i> Exportar
+      </button>
+    </div>
+
+    <!-- Leads Table with improved styling -->
+    <div
+      *ngIf="formulario.leads.length > 0; else sinLeads"
+      class="table-responsive"
+    >
+      <table class="table table-hover align-middle border-top">
+        <thead>
+          <tr class="bg-light">
+            <th scope="col" class="rounded-start ps-4" width="5%">#</th>
+            <th scope="col" width="25%">Nombre</th>
+            <th scope="col" width="30%">Email</th>
+            <th scope="col" width="20%">Estado</th>
+            <th scope="col" class="rounded-end" width="20%">Fecha de Envío</th>
+            <th scope="col" class="text-end" width="5%">Eliminar</th>
+            <th scope="col" class="text-end" width="5%">Editar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let lead of formulario.leads; let i = index"
+            class="border-bottom transition-all hover-shadow"
+          >
+            <td class="ps-4 fw-medium">{{ i + 1 }}</td>
+            <td class="fw-medium text-dark">{{ lead.nombre }}</td>
+            <td>
+              <span class="d-flex align-items-center">
+                <i class="fas fa-envelope text-muted me-2 small"></i>
+                {{ lead.email }}
+              </span>
+            </td>
+            <td>
+              <span
+                class="badge py-2 px-3 rounded-pill"
+                [ngClass]="{
+                  'bg-success-subtle text-success': lead.estado === 'NUEVO',
+                  'bg-warning-subtle text-warning': lead.estado === 'ATENDIDO',
+                  'bg-danger-subtle text-danger': lead.estado === 'DESCARTADO'
+                }"
+              >
+                <i
+                  class="fas me-1"
+                  [ngClass]="{
+                    'fa-star': lead.estado === 'NUEVO',
+                    'fa-clock': lead.estado === 'ATENDIDO',
+                    'fa-times-circle': lead.estado === 'DESCARTADO'
+                  }"
+                ></i>
+                {{ lead.estado | titlecase }}
+              </span>
+            </td>
+            <td class="text-muted small">
+              <i class="far fa-calendar me-1"></i>
+              {{ lead.fechaEnvio | date : "dd/MM/yyyy HH:mm" }}
+            </td>
+            <td class="text-center">
+              <button
+                (click)="eliminarLead(lead)"
+                class="btn btn-sm btn-outline-danger"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+            <td class="text-center">
+              <button
+                (click)="mostrarModalEdicion(lead)"
+                class="btn btn-sm btn-outline-primary"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State con mejor diseño -->
+    <ng-template #sinLeads>
+      <div
+        class="text-center py-5 my-3 bg-light rounded-3 animate__animated animate__fadeIn"
+      >
+        <h5 class="text-secondary mb-2">No hay leads registrados</h5>
+        <p class="text-muted mb-3">
+          Cuando registres tu primer lead, aparecerá aquí.
+        </p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Footer con acciones adicionales -->
+  <!-- Columna del formulario -->
+
+  <div class="card border-0 p-3">
+    <div class="card-body p-2">
+      <h5 class="d-flex align-items-center text-primary mb-3">
+        <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-2">
+          <i class="fas fa-user-plus text-primary"></i>
+        </div>
+        Agregar nuevo lead
+      </h5>
+
+      <form (ngSubmit)="agregarLead()" #leadForm="ngForm" class="row g-3">
+        <div class="col-md-5">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control rounded-3 border-0 bg-light"
+              id="nombreLead"
+              [(ngModel)]="nuevoLead.nombre"
+              name="nombre"
+              placeholder="Nombre completo"
+              required
+            />
+            <label for="nombreLead" class="text-muted">
+              <i class="fas fa-user me-1 small"></i> Nombre completo
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="form-floating">
+            <input
+              type="email"
+              class="form-control rounded-3 border-0 bg-light"
+              id="emailLead"
+              [(ngModel)]="nuevoLead.email"
+              name="email"
+              placeholder="Correo electrónico"
+              required
+            />
+            <label for="emailLead" class="text-muted">
+              <i class="fas fa-envelope me-1 small"></i> Correo electrónico
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-center">
+          <button
+            type="submit"
+            class="btn btn-primary rounded-pill px-3 py-3 w-100 d-flex justify-content-center align-items-center"
+            [disabled]="leadForm.invalid"
+            [ngClass]="{ 'btn-opacity-50': leadForm.invalid }"
+          >
+            <i class="fas fa-plus me-md-2"></i>
+            <span class="d-none d-md-inline">Agregar</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<app-editar-lead-modal
+  [visible]="leadModalVisible"
+  [lead]="leadSeleccionado"
+  (onGuardar)="guardarCambiosLead($event)"
+  (onCancelar)="ocultarModal()"
+></app-editar-lead-modal>
+
+<app-formulario-editar-modal
+  *ngIf="mostrarModalEditar"
+  [formulario]="formulario"
+  (guardar)="actualizarFormulario($event)"
+  (cerrar)="cerrarModalEditar()"
+></app-formulario-editar-modal>

@@ -1,0 +1,68 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="visible"></div>
+
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="visible" role="dialog" aria-labelledby="modalTitle" aria-hidden="!visible">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg animate__animated animate__zoomIn">
+      <!-- Modal Header -->
+      <div class="modal-header border-0 bg-light">
+        <h5 class="modal-title fw-bold text-primary" id="modalTitle">
+          <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Formulario
+        </h5>
+        <button type="button" class="btn-close transition-all" (click)="cancelar()" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body p-4">
+        <form>
+          <div class="mb-4">
+            <label for="nombre" class="form-label fw-semibold">
+              <i class="fas fa-file-alt me-1 text-secondary"></i> Nombre
+            </label>
+            <input
+              [(ngModel)]="formulario.nombre"
+              id="nombre"
+              name="nombre"
+              class="form-control form-control-lg transition-all"
+              placeholder="Ej. Formulario de Contacto"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="descripcion" class="form-label fw-semibold">
+              <i class="fas fa-align-left me-1 text-secondary"></i> Descripción
+            </label>
+            <textarea
+              [(ngModel)]="formulario.descripcion"
+              id="descripcion"
+              name="descripcion"
+              class="form-control transition-all"
+              rows="4"
+              placeholder="Describe el propósito del formulario..."
+            ></textarea>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer border-0">
+        <button
+          type="button"
+          class="btn btn-outline-secondary transition-all me-2"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-1"></i> Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary transition-all"
+          (click)="crear()"
+          [disabled]="!formulario.nombre"
+        >
+          <i class="fas fa-check me-1"></i> Crear
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

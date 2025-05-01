@@ -1,49 +1,56 @@
-<div class="container mt-5" style="max-width: 400px">
-  <div class="card shadow">
-    <div class="card-body">
-      <h4 class="card-title text-center mb-4">Iniciar Sesión</h4>
+<div class="container">
+  <div class="form-signin text-center">
+    <i class="fa-solid fa-building fa-9x" style="color: #74C0FC;"></i>
+            <h4 class="mb-4">Iniciar Sesión</h4>
 
-      <form (ngSubmit)="onLogin()">
-        <div class="mb-3">
-          <label for="username" class="form-label">Nombre de usuario</label>
-          <input
-            id="username"
-            type="text"
-            [(ngModel)]="username"
-            name="username"
-            class="form-control"
-            placeholder="Ingresa tu usuario"
-            required
-          />
-        </div>
-
-        <div class="mb-3">
-          <label for="password" class="form-label">Contraseña</label>
-          <input
-            id="password"
-            type="password"
-            [(ngModel)]="password"
-            name="password"
-            class="form-control"
-            placeholder="Ingresa tu contraseña"
-            required
-          />
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100">
-          Iniciar sesión
-        </button>
-      </form>
-
-      <div *ngIf="successMessage" class="alert alert-success mt-3">
-        {{ successMessage }}
+    <form (ngSubmit)="onLogin()">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="username"
+          class="form-control"
+          placeholder="Usuario"
+          required
+        />
+        <label for="username">Nombre de usuario</label>
       </div>
 
-      <div *ngIf="errorMessages.length > 0" class="alert alert-danger mt-3">
-        <ul class="mb-0">
-          <li *ngFor="let error of errorMessages">{{ error }}</li>
-        </ul>
+      <div class="form-floating mb-3">
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          class="form-control"
+          placeholder="Contraseña"
+          required
+        />
+        <label for="password">Contraseña</label>
       </div>
+
+      <button
+  type="submit"
+  class="btn btn-primary w-100"
+  [disabled]="isLoading"
+  [ngClass]="{'btn-loading loading': isLoading}"
+>
+  <span>Iniciar sesión</span>
+  <div *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status"></div>
+</button>
+
+    
+    </form>
+
+    <div *ngIf="successMessage" class="alert alert-success mt-3">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessages.length > 0" class="alert alert-danger mt-3">
+      <ul class="mb-0">
+        <li *ngFor="let error of errorMessages">{{ error }}</li>
+      </ul>
     </div>
   </div>
 </div>
