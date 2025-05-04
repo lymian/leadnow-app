@@ -1,0 +1,83 @@
+/* Estilos personalizados para el componente de formularios */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card {
+  background: linear-gradient(145deg, #ffffff, #f8f9fa);
+}
+
+.avatar-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.5em 1em;
+  transition: background-color 0.3s ease;
+}
+
+.badge:hover {
+  background-color: #0d6efd !important; /* Color primary más oscuro */
+}
+
+.text-primary {
+  color: #0d6efd !important;
+}
+
+.alert-info {
+  background-color: #e7f1ff;
+  color: #0d6efd;
+  border: none;
+}
+
+/* Mejora de la animación de fadeIn */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+/* Estilos responsivos */
+@media (max-width: 576px) {
+  .card-body {
+    padding: 1.5rem !important;
+  }
+
+  h5.card-title {
+    font-size: 1.1rem;
+  }
+
+  .avatar-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.4em 0.8em;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+}

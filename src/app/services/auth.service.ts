@@ -34,6 +34,6 @@ export class AuthService {
 
   // Método para eliminar el token (logout)
   logout(): void {
-    localStorage.removeItem('authToken');
+    localStorage.clear();
   }
 }

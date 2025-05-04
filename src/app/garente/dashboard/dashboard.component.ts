@@ -10,9 +10,11 @@ import { Trabajador, TrabajadorService } from '../../services/trabajador.service
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardGerenteComponent implements OnInit {
+
   isSidebarCollapsed = false;
   user: string = "";
+  userRole: string = ""; // Variable para almacenar el rol del usuario
   trabajador: Trabajador | null = null; // Variable para almacenar el trabajador
 
   constructor(private router: Router,
@@ -29,6 +31,7 @@ export class DashboardComponent implements OnInit {
         console.error('Error fetching trabajador:', error);
       }
     );
+
   }
 
   toggleSidebar() {
@@ -39,5 +42,4 @@ export class DashboardComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
 }

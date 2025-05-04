@@ -1,0 +1,68 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold text-dark">Leads de: {{ formulario?.nombre }}</h3>
+  </div>
+  <!--boton para volver-->
+  <div class="mb-3">
+    <button
+      class="btn btn-outline-primary"
+      (click)="volver()"
+      routerLink="/dashboard/trabajadores/formularios-trabajador"
+    >
+      <i class="fas fa-arrow-left me-2"></i> Volver a Formularios
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando leads...</p>
+  </div>
+
+  <div
+    *ngIf="!isLoading && formulario?.leads?.length > 0"
+    class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
+  >
+    <div
+      *ngFor="let lead of formulario.leads; let i = index"
+      class="col animate__animated animate__fadeIn"
+      [style.animation-delay]="i * 0.1 + 's'"
+    >
+      <div class="card border-0 shadow h-100 rounded-3 hover-card">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-start">
+            <h5 class="card-title mb-2 fw-semibold text-primary">
+              {{ lead.nombre }}
+            </h5>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-warning text-dark': lead.estado === 'NUEVO',
+                'bg-success': lead.estado === 'ATENDIDO'
+              }"
+            >
+              {{ lead.estado }}
+            </span>
+          </div>
+          <p class="card-text mb-2 text-muted">
+            <i class="fas fa-envelope me-2"></i> {{ lead.email }}
+          </p>
+          <p class="card-text mb-0 text-muted">
+            <i class="fas fa-calendar-alt me-2"></i> Enviado:
+            {{ lead.fechaEnvio | date : "dd/MM/yyyy HH:mm" }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="!isLoading && formulario?.leads?.length === 0"
+    class="alert alert-info mt-4 d-flex align-items-center rounded-3"
+    role="alert"
+  >
+    <i class="fas fa-info-circle me-2"></i>
+    Este formulario aún no tiene leads.
+  </div>
+</div>

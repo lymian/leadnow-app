@@ -1,7 +1,15 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  sub: string;
+  iat: number;
+  exp: number;
+  authorities: string[];
+}
 
 @Component({
   selector: 'app-login',
@@ -10,6 +18,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
+
 export class LoginComponent {
   username = '';
   password = '';
@@ -38,8 +47,22 @@ export class LoginComponent {
 
         // Si se recibió un token correctamente
         if (response.token) {
-          localStorage.setItem('user', this.username);
-          window.location.href = '/dashboard'; // Redirigir a la página de dashboard
+          localStorage.setItem('token', response.token);
+
+          const decodedToken: JwtPayload = jwtDecode(response.token);
+          const roles = decodedToken.authorities;
+
+          localStorage.setItem('user', decodedToken.sub);
+          localStorage.setItem('roles', JSON.stringify(roles));
+
+          // Redirigir según el rol
+          if (roles.includes('ROLE_ADMIN')) {
+            window.location.href = '/dashboard';
+          } else if (roles.includes('ROLE_GERENTE')) {
+            window.location.href = '/gerente';
+          } else {
+            window.location.href = '/'; // o alguna ruta de acceso denegado
+          }
         }
       },
       error: (error) => {

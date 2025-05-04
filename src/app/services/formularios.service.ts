@@ -50,4 +50,13 @@ export class FormulariosService {
   actualizarFormulario(id: number, dto: CrearFormularioDTO): Observable<Formulario> {
     return this.http.put<Formulario>(`${this.baseUrl}/actualizar/${id}`, dto);
   }
+
+  //http://localhost:8080/formularios/obtener/usuario/1
+  obtenerFormularioPorId(id: number): Observable<Formulario> {
+    return this.http.get<Formulario>(`${this.baseUrl}/obtener/usuario/${id}`);
+  }
+  //http://localhost:8080/formularios/obtener/1
+  obtenerFormularioConLeads(id: number): Observable<Formulario> {
+    return this.http.get<Formulario>(`${this.baseUrl}/obtener/${id}`);
+  }
 }
