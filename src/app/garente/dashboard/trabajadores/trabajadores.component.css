@@ -1,7 +1,6 @@
 /* Estilos personalizados para el componente de trabajadores */
 .hover-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
 }
 
 .hover-card:hover {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormulariosService, Formulario, Lead } from '../../../services/formularios.service';
 import { FormularioDetalleComponent } from '../formulario-detalle/formulario-detalle.component';
 import { CrearFormularioModalComponent } from '../../../components/crear-formulario-modal/crear-formulario-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-formularios',
@@ -50,6 +51,12 @@ export class FormulariosComponent implements OnInit {
       next: () => {
         this.cargarFormularios();
         this.cerrarModal();
+        Swal.fire({
+          icon: 'success',
+          title: 'Formulario creado',
+          text: 'El formulario se ha creado correctamente.',
+          confirmButtonText: 'Aceptar'
+        });
       },
       error: err => console.error('Error al crear formulario', err)
     });

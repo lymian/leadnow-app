@@ -11,6 +11,16 @@ export interface Trabajador {
   numeroFormularios: number;
 }
 
+export interface RegistrarTrabajador {
+  username: string;
+  nombreCompleto: string;
+  email: string;
+}
+
+export interface ChangePassword {
+  newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,5 +35,18 @@ export class TrabajadorService {
   //http://localhost:8080/usuarios/username/{username}
   obtenerTrabajadorPorUsername(username: string): Observable<Trabajador> {
     return this.http.get<Trabajador>(`${this.apiUrl}/username/${username}`);
+  }
+  //http://localhost:8080/usuarios/registrar
+  registrarTrabajador(trabajador: RegistrarTrabajador): Observable<Trabajador> {
+    return this.http.post<Trabajador>(`${this.apiUrl}/registrar`, trabajador);
+  }
+  //http://localhost:8080/usuarios/eliminar/{id}
+  eliminarTrabajador(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`);
+  }
+  //sin parametros
+  //http://localhost:8080/usuarios/cambiar-contrasena
+  cambiarContrasena(dto: ChangePassword): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/cambiar-contrasena`, dto);
   }
 }

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { EditarLeadModalComponent } from '../../../components/editar-lead-modal/editar-lead-modal.component';
 import { FormularioEditarModalComponent } from '../../../components/formulario-editar-modal/formulario-editar-modal.component';
 import { CrearFormularioDTO } from '../../../services/formularios.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-formulario-detalle',
@@ -45,6 +46,13 @@ export class FormularioDetalleComponent {
         // Limpiar el formulario
         this.nuevoLead.nombre = '';
         this.nuevoLead.email = '';
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: 'Lead creado',
+          text: 'El lead se ha creado correctamente.',
+          confirmButtonText: 'Aceptar'
+        });
       },
       error: (err) => {
         console.error('Error al crear lead:', err);
@@ -53,15 +61,29 @@ export class FormularioDetalleComponent {
   }
   // Método para eliminar un lead del formulario
   eliminarLead(lead: Lead): void {
-    this.leadsService.eliminarLead(lead.id).subscribe({
-      next: () => {
-        // Filtramos el lead eliminado de la lista del formulario
-        this.formulario.leads = this.formulario.leads.filter(l => l.id !== lead.id);
-      },
-      error: (err) => {
-        console.error('Error al eliminar lead:', err);
+    // Confirmar la eliminación del lead
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás recuperar este lead después de eliminarlo.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.leadsService.eliminarLead(lead.id).subscribe({
+          next: () => {
+            // Eliminar el lead de la lista del formulario
+            this.formulario.leads = this.formulario.leads.filter(l => l.id !== lead.id);
+            Swal.fire('Eliminado', 'El lead ha sido eliminado.', 'success');
+          },
+          error: (err) => {
+            console.error('Error al eliminar lead:', err);
+          }
+        });
       }
     });
+
   }
   // Método para actualizar un lead del formulario
   actualizarLead(lead: Lead): void {
@@ -102,19 +124,44 @@ export class FormularioDetalleComponent {
         const index = this.formulario.leads.findIndex(l => l.id === leadEditado.id);
         if (index !== -1) this.formulario.leads[index] = leadEditado;
         this.ocultarModal();
+        Swal.fire({
+          icon: 'success',
+          title: 'Lead actualizado',
+          text: 'El lead se ha actualizado correctamente.',
+          confirmButtonText: 'Aceptar'
+        });
       },
       error: err => console.error('Error al actualizar lead', err)
     });
   }
 
   eliminarFormulario(): void {
-    this.formulariosService.eliminarFormulario(this.formulario.id).subscribe({
-      next: () => {
-        console.log('Formulario eliminado:', this.formulario.id);
-        this.cerrarDetalle(); // Cerrar el detalle del formulario después de eliminarlo
-      },
-      error: (err) => {
-        console.error('Error al eliminar formulario:', err);
+
+    // Confirmar la eliminación del formulario
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás recuperar este formulario después de eliminarlo.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.formulariosService.eliminarFormulario(this.formulario.id).subscribe({
+          next: () => {
+            console.log('Formulario eliminado:', this.formulario.id);
+            this.cerrarDetalle(); // Cerrar el detalle del formulario después de eliminarlo
+            Swal.fire({
+              icon: 'success',
+              title: 'Formulario eliminado',
+              text: 'El formulario se ha eliminado correctamente.',
+              confirmButtonText: 'Aceptar'
+            });
+          },
+          error: (err) => {
+            console.error('Error al eliminar formulario:', err);
+          }
+        });
       }
     });
   }
@@ -136,6 +183,12 @@ export class FormularioDetalleComponent {
         this.formulario.nombre = formActualizado.nombre;
         this.formulario.descripcion = formActualizado.descripcion;
         this.cerrarModalEditar();
+        Swal.fire({
+          icon: 'success',
+          title: 'Formulario actualizado',
+          text: 'El formulario se ha actualizado correctamente.',
+          confirmButtonText: 'Aceptar'
+        });
       },
       error: (err) => console.error('Error al actualizar formulario', err)
     });

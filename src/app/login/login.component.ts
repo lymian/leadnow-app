@@ -47,8 +47,7 @@ export class LoginComponent {
 
         // Si se recibió un token correctamente
         if (response.token) {
-          localStorage.setItem('token', response.token);
-
+          //localStorage.setItem('token', response.token);
           const decodedToken: JwtPayload = jwtDecode(response.token);
           const roles = decodedToken.authorities;
 

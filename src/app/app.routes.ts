@@ -6,6 +6,7 @@ import { DashboardGerenteComponent } from './garente/dashboard/dashboard.compone
 import { TrabajadoresComponent } from './garente/dashboard/trabajadores/trabajadores.component';
 import { FormulariosTrabajadorComponent } from './garente/dashboard/trabajadores/formularios-trabajador/formularios-trabajador.component';
 import { LeadsComponent } from './garente/dashboard/trabajadores/leads/leads.component';
+import { CuentaComponent } from './components/cuenta/cuenta.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -15,6 +16,7 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'formularios', pathMatch: 'full' },
             { path: 'formularios', component: FormulariosComponent },
+            { path: 'cuenta', component: CuentaComponent },
         ],
     },
     {
@@ -23,6 +25,8 @@ export const routes: Routes = [
             { path: 'trabajadores', component: TrabajadoresComponent },
             { path: 'trabajadores/:id/formularios', component: FormulariosTrabajadorComponent },
             { path: 'formularios/:id/leads', component: LeadsComponent },
+            { path: 'cuenta', component: CuentaComponent },
+
         ]
     }
 ];

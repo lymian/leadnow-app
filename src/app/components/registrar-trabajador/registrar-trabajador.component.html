@@ -1,0 +1,96 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="visible"></div>
+
+<!-- Modal -->
+<div
+  class="modal fade show d-block"
+  tabindex="-1"
+  *ngIf="visible"
+  role="dialog"
+  aria-labelledby="modalTitle"
+  aria-hidden="!visible"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg animate__animated animate__zoomIn">
+      <!-- Modal Header -->
+      <div class="modal-header border-0 bg-light">
+        <h5 class="modal-title fw-bold text-primary" id="modalTitle">
+          <i class="fas fa-user-plus me-2"></i>Registrar Nuevo Trabajador
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          (click)="cancelar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body p-4">
+        <form>
+          <div class="mb-3">
+            <label for="username" class="form-label fw-semibold">
+              <i class="fas fa-user me-1 text-secondary"></i> Usuario
+            </label>
+            <input
+              [(ngModel)]="nuevoTrabajador.username"
+              id="username"
+              name="username"
+              class="form-control form-control-lg"
+              placeholder="Ej. juanperez"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold">
+              <i class="fas fa-envelope me-1 text-secondary"></i> Correo
+              electrónico
+            </label>
+            <input
+              [(ngModel)]="nuevoTrabajador.email"
+              id="email"
+              name="email"
+              type="email"
+              class="form-control form-control-lg"
+              placeholder="Ej. juan@example.com"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="nombreCompleto" class="form-label fw-semibold">
+              <i class="fas fa-id-card me-1 text-secondary"></i> Nombre completo
+            </label>
+            <input
+              [(ngModel)]="nuevoTrabajador.nombreCompleto"
+              id="nombreCompleto"
+              name="nombreCompleto"
+              class="form-control form-control-lg"
+              placeholder="Ej. Juan Pérez"
+            />
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer border-0">
+        <button
+          type="button"
+          class="btn btn-outline-secondary me-2"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-1"></i> Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="crear()"
+          [disabled]="!nuevoTrabajador.username || !nuevoTrabajador.email"
+        >
+          <i class="fas fa-check me-1"></i> Registrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
